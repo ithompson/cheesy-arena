@@ -131,6 +131,7 @@ func (web *Web) newHandler() http.Handler {
 	mux.HandleFunc("POST /alliance_selection/finalize", web.allianceSelectionFinalizeHandler)
 	mux.HandleFunc("POST /alliance_selection/reset", web.allianceSelectionResetHandler)
 	mux.HandleFunc("POST /alliance_selection/start", web.allianceSelectionStartHandler)
+	mux.HandleFunc("POST /alliance_selection/add_team", web.allianceSelectionAddTeamHandler)
 	mux.HandleFunc("GET /api/alliances", web.alliancesApiHandler)
 	mux.HandleFunc("GET /api/arena/websocket", web.arenaWebsocketApiHandler)
 	mux.HandleFunc("GET /api/bracket/svg", web.bracketSvgApiHandler)

@@ -125,6 +125,15 @@ UI for controlling the alliance selection process.
   </div>
   {{end}}
 </div>
+<div class="row">
+  <form class="form-horizontal" action="/alliance_selection/add_team" method="POST">
+    <label for="alliance">Alliance</label>
+    <input type="number" name="alliance" required />
+    <label for="team">Team</label>
+    <input type="number" name="team" required />
+    <button type="submit" class="btn btn-primary">Add Team</button>
+  </form>
+</div>
 <div id="confirmResetAllianceSelection" class="modal" style="top: 20%;">
   <div class="modal-dialog">
     <div class="modal-content">

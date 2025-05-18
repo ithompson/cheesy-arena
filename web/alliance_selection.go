@@ -98,6 +98,49 @@ func (web *Web) allianceSelectionPostHandler(w http.ResponseWriter, r *http.Requ
 	http.Redirect(w, r, "/alliance_selection", 303)
 }
 
+func (web *Web) allianceSelectionAddTeamHandler(w http.ResponseWriter, r *http.Request) {
+	if !web.userIsAdmin(w, r) {
+		return
+	}
+
+	allianceString := r.PostFormValue("alliance")
+	teamString := r.PostFormValue("team")
+
+	allianceId, err := strconv.Atoi(allianceString)
+	if err != nil {
+		web.renderAllianceSelection(w, r, fmt.Sprintf("Invalid alliance number value '%s'.", allianceString))
+		return
+	}
+
+	teamId, err := strconv.Atoi(teamString)
+	if err != nil {
+		web.renderAllianceSelection(w, r, fmt.Sprintf("Invalid team number value '%s'.", teamString))
+		return
+	}
+
+	team, err := web.arena.Database.GetTeamById(teamId)
+	if err != nil || team == nil {
+		web.renderAllianceSelection(w, r, fmt.Sprintf("Team %d is not playing at this event.", teamId))
+		return
+	}
+
+	alliance, err := web.arena.Database.GetAllianceById(allianceId)
+	if err != nil || alliance == nil {
+		web.renderAllianceSelection(w, r, fmt.Sprintf("Invalid alliance '%d'.", allianceId))
+		return
+	}
+
+	if len(alliance.TeamIds) >= 4 {
+		web.renderAllianceSelection(w, r, fmt.Sprintf("Alliance %d is already full.", allianceId))
+		return
+	}
+
+	alliance.TeamIds = append(alliance.TeamIds, teamId)
+	web.arena.Database.UpdateAlliance(alliance)
+
+	web.renderAllianceSelection(w, r, fmt.Sprintf("Successfully added team %d to alliance %d", teamId, allianceId))
+}
+
 // Sets up the empty alliances and populates the ranked team list.
 func (web *Web) allianceSelectionStartHandler(w http.ResponseWriter, r *http.Request) {
 	if !web.userIsAdmin(w, r) {
