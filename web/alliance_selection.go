@@ -121,7 +121,11 @@ func (web *Web) allianceSelectionStartHandler(w http.ResponseWriter, r *http.Req
 	}
 	for i := 0; i < web.arena.EventSettings.NumPlayoffAlliances; i++ {
 		web.arena.AllianceSelectionAlliances[i].Id = i + 1
-		web.arena.AllianceSelectionAlliances[i].TeamIds = make([]int, teamsPerAlliance)
+		if i == 0 || i == 1 {
+			web.arena.AllianceSelectionAlliances[i].TeamIds = make([]int, 3)
+		} else {
+			web.arena.AllianceSelectionAlliances[i].TeamIds = make([]int, teamsPerAlliance)
+		}
 	}
 
 	// Populate the ranked list of teams.
@@ -138,9 +142,23 @@ func (web *Web) allianceSelectionStartHandler(w http.ResponseWriter, r *http.Req
 			Picked: false,
 		}
 	}
+	web.allianceSelectionAddPlaceholderTeam(9970)
+	web.allianceSelectionAddPlaceholderTeam(9971)
+	web.allianceSelectionAddPlaceholderTeam(9972)
+	web.allianceSelectionAddPlaceholderTeam(9973)
 
 	web.arena.AllianceSelectionNotifier.Notify()
 	http.Redirect(w, r, "/alliance_selection", 303)
+}
+
+func (web *Web) allianceSelectionAddPlaceholderTeam(teamId int) {
+	// Add a placeholder team to the alliance selection list.
+	team := model.AllianceSelectionRankedTeam{
+		Rank:   len(web.arena.AllianceSelectionRankedTeams) + 1,
+		TeamId: teamId,
+		Picked: false,
+	}
+	web.arena.AllianceSelectionRankedTeams = append(web.arena.AllianceSelectionRankedTeams, team)
 }
 
 // Resets the alliance selection process back to the starting point.
@@ -419,13 +437,13 @@ func (web *Web) determineNextCell() (int, int) {
 	// Check the fourth column.
 	if web.arena.EventSettings.SelectionRound3Order == "F" {
 		for i, alliance := range web.arena.AllianceSelectionAlliances {
-			if alliance.TeamIds[3] == 0 {
+			if len(alliance.TeamIds) >= 4 && alliance.TeamIds[3] == 0 {
 				return i, 3
 			}
 		}
 	} else if web.arena.EventSettings.SelectionRound3Order == "L" {
 		for i := len(web.arena.AllianceSelectionAlliances) - 1; i >= 0; i-- {
-			if web.arena.AllianceSelectionAlliances[i].TeamIds[3] == 0 {
+			if len(web.arena.AllianceSelectionAlliances[i].TeamIds) >= 4 && web.arena.AllianceSelectionAlliances[i].TeamIds[3] == 0 {
 				return i, 3
 			}
 		}
