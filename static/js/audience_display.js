@@ -277,7 +277,11 @@ const handleAllianceSelection = function(data) {
   const alliances = data.Alliances;
   const rankedTeams = data.RankedTeams;
   if (alliances && alliances.length > 0) {
-    const numColumns = alliances[0].TeamIds.length + 1;
+    if (alliances.length == 8) {
+      // Visually suppress alliance 8
+      alliances.pop();
+    }
+    const numColumns = alliances[3].TeamIds.length + 1;
     $.each(alliances, function(k, v) {
       v.Index = k + 1;
     });
@@ -286,7 +290,7 @@ const handleAllianceSelection = function(data) {
   if (rankedTeams) {
       let text = "";
       $.each(rankedTeams, function(i, v) {
-        if (!v.Picked) {
+        if (!v.Picked && !(9970 <= v.TeamId || 9973 <= v.TeamId)) {
           text += `<div class="unpicked"><div class="unpicked-rank">${v.Rank}.</div>` +
             `<div class="unpicked-team">${v.TeamId}</div></div>`;
         }

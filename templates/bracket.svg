@@ -181,6 +181,14 @@
       text-anchor:middle;
     }
 
+    .matchblock .bye {
+      fill:#666666;
+      font-family:'FuturaLT-Bold';
+      font-size:25.9715px;
+      font-style:italic;
+      text-anchor:middle;
+    }
+
     .matchblock.complete.red-win .teamnum.b,
     .matchblock.complete.blue-win .teamnum.r {
       fill:#888888;
@@ -410,7 +418,9 @@
   <rect class="structure" y="23" width="205" height="130.452"/>
   <text id="series_status" x="203.9999" y="170.5669" class="{{.SeriesLeader}}">{{.SeriesStatus}}</text>
   <text id="match_title" x="0" y="17.3691">{{.Id}}</text>
-  {{if .RedAlliance}}
+  {{if (eq .Id "M5")}}
+    <text class="bye" x="101.1501" y="66.5769">BYE</text>
+  {{else if .RedAlliance}}
     <text x="22" y="70" class="alliancenum r">{{.RedAlliance.Id}}</text>
     {{if ge (len .RedAlliance.TeamIds) 3}}
       <text x="85" y="51" class="teamnum r">{{index .RedAlliance.TeamIds 0}}</text>
@@ -423,7 +433,9 @@
   {{else}}
     <text class="placeholder" x="101.1501" y="66.5769">{{.RedAllianceSource}}</text>
   {{end}}
-  {{if .BlueAlliance}}
+  {{if (eq .Id "M1")}}
+    <text class="bye" x="101.1501" y="130.4177">BYE</text>
+  {{else if .BlueAlliance}}
     <text x="22" y="135" class="alliancenum b">{{.BlueAlliance.Id}}</text>
     {{if ge (len .BlueAlliance.TeamIds) 3}}
       <text x="85" y="116" class="teamnum b">{{index .BlueAlliance.TeamIds 0}}</text>

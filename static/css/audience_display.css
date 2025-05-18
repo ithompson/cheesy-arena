@@ -587,7 +587,7 @@ html {
   vertical-align: middle;
 }
 #allianceSelectionTable {
-  background-color: #fff;
+  background-color: #aaa;
   border: 2px solid #222;
   text-align: center;
   font-family: "FuturaLT";
@@ -595,6 +595,9 @@ html {
 }
 #allianceSelectionTable tr:nth-child(even) {
   background-color: #ccc;
+}
+#allianceSelectionTable tr:nth-child(odd) {
+  background-color: #fff;
 }
 .alliance-cell {
   padding: 0px 20px;
